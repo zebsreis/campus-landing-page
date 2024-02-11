@@ -156,6 +156,14 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
+    // Check if the device supports touch
+    // This is a simple way to differentiate desktops from mobile/tablet devices
+    // Note: This method might not be 100% accurate for all cases, as some desktops are touch-enabled
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        // Exit the function if touch is supported, indicating a non-desktop device
+        return;
+    }
+
     const buttons = document.querySelectorAll('.is-form-submit');
 
     buttons.forEach(button => {
@@ -166,36 +174,29 @@ function initButtonMagneticEffect() {
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
 
-            // Normalize the cursor's position relative to the button center
             const distanceX = x / (rect.width / 2);
             const distanceY = y / (rect.height / 2);
 
-            // Calculate magnetic effect movement
             const magneticEffectIntensity = 10;
             const moveX = distanceX * magneticEffectIntensity;
             const moveY = distanceY * magneticEffectIntensity;
 
-            // Calculate tilt direction
-            // Adjust tilt direction based on the cursor being left or right of center
-            const rotationEffectIntensity = 10;
             let tilt;
-            if (x > 0) { // Cursor is on the right side
-                // Invert the tilt direction for the right side to match the left side's intuitive movement
-                tilt = distanceY * rotationEffectIntensity;
-            } else { // Cursor is on the left side
-                tilt = -distanceY * rotationEffectIntensity;
+            if (x > 0) {
+                tilt = distanceY * 20;
+            } else {
+                tilt = -distanceY * 20;
             }
 
-            // Apply the transformations
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
         });
 
         button.addEventListener('mouseleave', () => {
-            // Reset the button to its original state
             button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
         });
     });
 }
+
 
 
 
