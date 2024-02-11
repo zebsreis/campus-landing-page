@@ -156,11 +156,11 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    // Check if the device supports touch
-    // This is a simple way to differentiate desktops from mobile/tablet devices
-    // Note: This method might not be 100% accurate for all cases, as some desktops are touch-enabled
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        // Exit the function if touch is supported, indicating a non-desktop device
+    // Check for touch capability and a minimum screen width to better target desktops
+    // Adjust the minWidth threshold as needed to suit your definition of "desktop" size
+    const minWidth = 1024;
+    if (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth < minWidth) {
+        // Likely a mobile device or a tablet, so exit the function without applying the effects
         return;
     }
 
