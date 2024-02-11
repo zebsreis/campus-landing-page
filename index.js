@@ -1,56 +1,56 @@
-<!-- GSP Letters start -->
-<script src="https://unpkg.com/split-type"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
-<script>
-window.addEventListener("DOMContentLoaded", (event) => {
-  // Split text into spans
-  let typeSplit = new SplitType("[text-split]", {
-    types: "words, chars",
-    tagName: "span"
-  });
-
-  // Link timelines to scroll position
-  function createScrollTrigger(triggerElement, timeline) {
-    // Reset tl when scroll out of view past bottom of screen
-    ScrollTrigger.create({
-      trigger: triggerElement,
-      start: "top bottom",
-      onLeaveBack: () => {
-        timeline.progress(0);
-        timeline.pause();
-      }
-    });
-    // Play tl when scrolled into view (60% from top of screen)
-    ScrollTrigger.create({
-      trigger: triggerElement,
-      start: "top 60%",
-      onEnter: () => timeline.play()
-    });
-  }
-
-  $("[letters-slide-up]").each(function (index) {
-    let tl = gsap.timeline({ paused: true });
-    tl.from($(this).find(".char"), { yPercent: 100, duration: 0.8, ease: "power1.out", stagger: { amount: 0.2 } });
-    createScrollTrigger($(this), tl);
-  });
-
-  // Avoid flash of unstyled content
-  gsap.set("[text-split]", { opacity: 1 });
+document.addEventListener("DOMContentLoaded", () => {
+    initGspLettersAnimation();
+    initClickAndDragTestimonialsInertia();
+    initMoreFeaturesSectionAnimation();
+    initLenisSmoothScroll();
+    initFooterSpacingCalcs();
+    initButtonMagneticEffect();
 });
-</script>
-<!-- GSP Letters finish -->
 
-<script> 
-// Click and Drag Testemonials Inertia Snippet
-document.addEventListener('DOMContentLoaded', function() {
+function initGspLettersAnimation() {
+    let typeSplit = new SplitType("[text-split]", {
+        types: "words, chars",
+        tagName: "span"
+    });
+
+    function createScrollTrigger(triggerElement, timeline) {
+        ScrollTrigger.create({
+            trigger: triggerElement,
+            start: "top bottom",
+            onLeaveBack: () => {
+                timeline.progress(0);
+                timeline.pause();
+            }
+        });
+        ScrollTrigger.create({
+            trigger: triggerElement,
+            start: "top 60%",
+            onEnter: () => timeline.play()
+        });
+    }
+
+    document.querySelectorAll("[letters-slide-up]").forEach((element) => {
+        let tl = gsap.timeline({ paused: true });
+        tl.from(element.querySelectorAll(".char"), {
+            yPercent: 100,
+            duration: 0.8,
+            ease: "power1.out",
+            stagger: { amount: 0.2 }
+        });
+        createScrollTrigger(element, tl);
+    });
+
+    gsap.set("[text-split]", { opacity: 1 });
+}
+
+function initClickAndDragTestimonialsInertia() {
     const ele = document.getElementById('clickanddrag');
     let lastX, velocityX = 0, inertiaInterval = null;
 
     if (window.innerWidth > 768) {
         ele.style.overflowX = 'hidden';
 
-        ele.addEventListener('mousedown', function(e) {
+        ele.addEventListener('mousedown', function (e) {
             clearInterval(inertiaInterval);
             lastX = e.clientX;
             ele.style.userSelect = 'none';
@@ -74,153 +74,120 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
     }
-});
-</script>
+}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the section as hidden
-    var div = document.getElementById('more-features');
-    div.style.maxHeight = '0px'; // Ensure the section starts hidden
+function initMoreFeaturesSectionAnimation() {
+    const div = document.getElementById('more-features');
+    let animationInProgress = false;
+    let currentInterval;
 
-    var animationInProgress = false;
-    var currentInterval;
-
-    document.getElementById('show-more-features').addEventListener('click', function() {
-      if (animationInProgress) {
-        clearInterval(currentInterval); // Clear the ongoing animation if the button is clicked again
-      }
-      animationInProgress = true; // Set the flag to indicate an animation is in progress
-
-      var targetHeight = div.scrollHeight; // The full height of the content
-      var step = targetHeight / 50; // Determine the step size
-      
-      if (div.style.maxHeight === '0px' || div.style.maxHeight === '') {
-        // Expand the div
-        let currentHeight = 0;
-        currentInterval = setInterval(function() {
-          currentHeight += step;
-          div.style.maxHeight = currentHeight + 'px';
-          if (currentHeight >= targetHeight) {
+    document.getElementById('show-more-features').addEventListener('click', () => {
+        if (animationInProgress) {
             clearInterval(currentInterval);
-            div.style.maxHeight = targetHeight + 'px'; // Use exact targetHeight for max-height
-            animationInProgress = false; // Reset the flag
-          }
-        }, 10);
-      } else {
-        // Collapse the div
-        let currentHeight = parseInt(div.style.maxHeight, 10);
-        currentInterval = setInterval(function() {
-          currentHeight -= step;
-          div.style.maxHeight = currentHeight + 'px';
-          if (currentHeight <= 0) {
-            clearInterval(currentInterval);
-            div.style.maxHeight = '0'; // Ensure div collapses fully
-            animationInProgress = false; // Reset the flag
-          }
-        }, 10);
-      }
+        }
+        animationInProgress = true;
+
+        let targetHeight = div.scrollHeight;
+        let step = targetHeight / 50;
+
+        if (div.style.maxHeight === '0px' || div.style.maxHeight === '') {
+            let currentHeight = 0;
+            currentInterval = setInterval(() => {
+                currentHeight += step;
+                div.style.maxHeight = currentHeight + 'px';
+                if (currentHeight >= targetHeight) {
+                    clearInterval(currentInterval);
+                    div.style.maxHeight = targetHeight + 'px';
+                    animationInProgress = false;
+                }
+            }, 10);
+        } else {
+            let currentHeight = parseInt(div.style.maxHeight, 10);
+            currentInterval = setInterval(() => {
+                currentHeight -= step;
+                div.style.maxHeight = currentHeight + 'px';
+                if (currentHeight <= 0) {
+                    clearInterval(currentInterval);
+                    div.style.maxHeight = '0';
+                    animationInProgress = false;
+                }
+            }, 10);
+        }
     });
-});
-</script>
-
-<!-- Lenis Smooth Scroll -->
-
-<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@0.2.28/bundled/lenis.js"></script>
-<script>
-const lenis = new Lenis({
-  duration: 2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
-  direction: 'vertical', // vertical, horizontal
-  gestureDirection: 'vertical', // vertical, horizontal, both
-  smooth: true,
-  mouseMultiplier: 1,
-  smoothTouch: false,
-  touchMultiplier: 2,
-  infinite: false,
-})
-
-//get scroll value
-lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
-  console.log({ scroll, limit, velocity, direction, progress })
-})
-
-function raf(time) {
-  lenis.raf(time)
-  requestAnimationFrame(raf)
 }
 
-requestAnimationFrame(raf)
-</script>
-<!-- end of lenis scrool -->
+function initLenisSmoothScroll() {
+    const lenis = new Lenis({
+        duration: 2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+    });
 
-<!-- footer spacing calcs -->
-<script>
-function adjustFooterSpacing() {
-    var footer = document.getElementById('footer');
-    var footerSpacing = document.getElementById('footer-spacing');
+    lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
+        console.log({ scroll, limit, velocity, direction, progress });
+    });
 
-    // Get the height of the footer
-    var footerHeight = footer.offsetHeight;
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
 
-    // Set the height of the footer-spacing div to match the footer
-    footerSpacing.style.height = footerHeight + 'px';
+    requestAnimationFrame(raf);
 }
 
-// Adjust the footer spacing on initial load
-adjustFooterSpacing();
+function initFooterSpacingCalcs() {
+    const footer = document.getElementById('footer');
+    const footerSpacing = document.getElementById('footer-spacing');
 
-// Adjust the footer spacing whenever the window is resized
-window.addEventListener('resize', adjustFooterSpacing);
-</script>
+    function adjustFooterSpacing() {
+        const footerHeight = footer.offsetHeight;
+        footerSpacing.style.height = footerHeight + 'px';
+    }
 
-<!-- Button magnetic -->
+    adjustFooterSpacing();
+    window.addEventListener('resize', adjustFooterSpacing);
+}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+function initButtonMagneticEffect() {
     const buttons = document.querySelectorAll('.button');
 
     buttons.forEach(button => {
-        button.addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
+        button.addEventListener('mousemove', (e) => {
+            const rect = button.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
 
-            // Calculate distances from the center
-            const distanceX = x / (rect.width / 2); // Normalized -1 to 1
-            const distanceY = y / (rect.height / 2); // Normalized -1 to 1
+            const distanceX = x / (rect.width / 2);
+            const distanceY = y / (rect.height / 2);
 
-            // Magnetic effect calculations
-            const moveX = distanceX * 10; // Moves -10px to 10px on the X axis
-            const moveY = distanceY * 10; // Moves -10px to 10px on the Y axis
+            const moveX = distanceX * 10;
+            const moveY = distanceY * 10;
 
-            // Gradual tilt effect calculation
-            // Calculate proportional rotation based on the cursor's distance to the center
             const distanceToCenter = Math.sqrt(x * x + y * y);
             const maxDistance = Math.sqrt((rect.width / 2) * (rect.width / 2) + (rect.height / 2) * (rect.height / 2));
             const normalizedDistance = distanceToCenter / maxDistance;
 
-            // Determine the maximum tilt angle
-            const maxTilt = 5; // Maximum tilt in degrees
-            let rotation = normalizedDistance * maxTilt; // Adjust tilt based on normalized distance
-
-            // Adjust rotation direction based on quadrant
-            if (x > 0 && y < 0) { // Top right quadrant
+            const maxTilt = 5;
+            let rotation = normalizedDistance * maxTilt;
+            if (x > 0 && y < 0) {
                 rotation = -rotation;
-            } else if (x < 0 && y > 0) { // Bottom left quadrant
+            } else if (x < 0 && y > 0) {
                 rotation = -rotation;
             }
 
-            // Apply combined effects with proportional rotation
-            this.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${rotation}deg)`;
+            button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${rotation}deg)`;
         });
 
-        button.addEventListener('mouseleave', function(e) {
-            // Reset the button orientation and position
-            this.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
         });
     });
-});
-</script>
+}
