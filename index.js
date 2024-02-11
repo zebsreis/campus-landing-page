@@ -166,29 +166,43 @@ function initButtonMagneticEffect() {
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
 
+            // Normalize the cursor's position relative to the button center
             const distanceX = x / (rect.width / 2);
             const distanceY = y / (rect.height / 2);
 
-            const moveX = distanceX * 10;
-            const moveY = distanceY * 10;
+            // Calculate magnetic effect movement
+            const magneticEffectIntensity = 10;
+            const moveX = distanceX * magneticEffectIntensity;
+            const moveY = distanceY * magneticEffectIntensity;
 
-            const distanceToCenter = Math.sqrt(x * x + y * y);
-            const maxDistance = Math.sqrt((rect.width / 2) * (rect.width / 2) + (rect.height / 2) * (rect.height / 2));
-            const normalizedDistance = distanceToCenter / maxDistance;
-
-            const maxTilt = 5;
-            let rotation = normalizedDistance * maxTilt;
-            if (x > 0 && y < 0) {
-                rotation = -rotation;
-            } else if (x < 0 && y > 0) {
-                rotation = -rotation;
+            // Calculate tilt direction
+            // Adjust tilt direction based on the cursor being left or right of center
+            const rotationEffectIntensity = 10;
+            let tilt;
+            if (x > 0) { // Cursor is on the right side
+                // Invert the tilt direction for the right side to match the left side's intuitive movement
+                tilt = distanceY * rotationEffectIntensity;
+            } else { // Cursor is on the left side
+                tilt = -distanceY * rotationEffectIntensity;
             }
 
-            button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${rotation}deg)`;
+            // Apply the transformations
+            button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
         });
 
         button.addEventListener('mouseleave', () => {
+            // Reset the button to its original state
             button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
         });
     });
 }
+
+
+
+
+
+
+
+
+
+
