@@ -1,3 +1,4 @@
+// test 
 document.addEventListener("DOMContentLoaded", () => {
     initGspLettersAnimation();
     initClickAndDragTestimonialsInertia();
