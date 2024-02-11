@@ -156,7 +156,7 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    const buttons = document.querySelectorAll('.button');
+    const buttons = document.querySelectorAll('.is-form-submit');
 
     buttons.forEach(button => {
         button.addEventListener('mousemove', (e) => {
