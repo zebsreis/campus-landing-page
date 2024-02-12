@@ -1,4 +1,3 @@
-// test 
 document.addEventListener("DOMContentLoaded", () => {
     initGspLettersAnimation();
     initClickAndDragTestimonialsInertia();
@@ -156,18 +155,23 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    const isMobileOrTablet = ('ontouchstart' in window || navigator.maxTouchPoints > 0) || window.innerWidth < 1024;
+    // This flag will be true if a touch event has been detected
+    let touchDetected = false;
 
-    if (isMobileOrTablet) {
-        // It's a mobile device or a tablet, or the screen width is less than 1024px
-        // Exit the function without applying the effects
-        return;
-    }
+    // Listen for touchstart event to set the flag
+    window.addEventListener('touchstart', function onFirstTouch() {
+        touchDetected = true;
+        // Remove the event listener once a touch event is detected to avoid unnecessary calls
+        window.removeEventListener('touchstart', onFirstTouch, false);
+    }, false);
 
     const buttons = document.querySelectorAll('.is-form-submit');
 
     buttons.forEach(button => {
-        const mouseMoveHandler = (e) => {
+        button.addEventListener('mousemove', (e) => {
+            // Do not proceed if the device is a touchscreen (touchDetected is true)
+            if (touchDetected) return;
+
             const rect = button.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -189,16 +193,17 @@ function initButtonMagneticEffect() {
             }
 
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
-        };
+        });
 
-        const mouseLeaveHandler = () => {
-            button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
-        };
-
-        button.addEventListener('mousemove', mouseMoveHandler);
-        button.addEventListener('mouseleave', mouseLeaveHandler);
+        button.addEventListener('mouseleave', () => {
+            // Reset transform only if touch hasn't been detected
+            if (!touchDetected) {
+                button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
+            }
+        });
     });
 }
+
 
 
 
