@@ -156,11 +156,10 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    // Check for touch capability and a minimum screen width to better target desktops
     // Adjust the minWidth threshold as needed to suit your definition of "desktop" size
     const minWidth = 1024;
-    if (('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth < minWidth) {
-        // Likely a mobile device or a tablet, so exit the function without applying the effects
+    if (window.innerWidth < minWidth) {
+        // The screen size is tablet or smaller, so exit the function without applying the effects
         return;
     }
 
@@ -196,6 +195,7 @@ function initButtonMagneticEffect() {
         });
     });
 }
+
 
 
 
