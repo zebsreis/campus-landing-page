@@ -155,54 +155,34 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    // This flag will be true if a touch event has been detected
-    let touchDetected = false;
+    // Exit the function if the device screen width is less than 1024 pixels
+    if (window.innerWidth < 1024) {
+        return;
+    }
 
-    // Listen for touchstart event to set the flag
-    window.addEventListener('touchstart', function onFirstTouch() {
-        touchDetected = true;
-        // Remove the event listener once a touch event is detected to avoid unnecessary calls
-        window.removeEventListener('touchstart', onFirstTouch, false);
-    }, false);
-
-    const buttons = document.querySelectorAll('.is-form-submit');
-
-    buttons.forEach(button => {
+    // Apply the magnetic effect to buttons
+    document.querySelectorAll('.is-form-submit').forEach(button => {
         button.addEventListener('mousemove', (e) => {
-            // Do not proceed if the device is a touchscreen (touchDetected is true)
-            if (touchDetected) return;
-
             const rect = button.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
 
-            const distanceX = x / (rect.width / 2);
-            const distanceY = y / (rect.height / 2);
-
-            const magneticEffectIntensity = 10;
-            const moveX = distanceX * magneticEffectIntensity;
-            const moveY = distanceY * magneticEffectIntensity;
-
-            let tilt;
-            if (x > 0) {
-                tilt = distanceY * 20;
-            } else {
-                tilt = -distanceY * 20;
-            }
+            const tiltIntensity = 20;
+            const moveX = (x / rect.width) * 100; // Adjust for magnetic effect
+            const moveY = (y / rect.height) * 100; // Adjust for magnetic effect
+            const tilt = x > 0 ? y * tiltIntensity : -y * tiltIntensity;
 
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
         });
 
         button.addEventListener('mouseleave', () => {
-            // Reset transform only if touch hasn't been detected
-            if (!touchDetected) {
-                button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
-            }
+            button.style.transform = '';
         });
     });
 }
+
 
 
 
