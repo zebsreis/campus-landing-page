@@ -156,17 +156,18 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    // Adjust the minWidth threshold as needed to suit your definition of "desktop" size
-    const minWidth = 1024;
-    if (window.innerWidth < minWidth) {
-        // The screen size is tablet or smaller, so exit the function without applying the effects
+    const isMobileOrTablet = ('ontouchstart' in window || navigator.maxTouchPoints > 0) || window.innerWidth < 1024;
+
+    if (isMobileOrTablet) {
+        // It's a mobile device or a tablet, or the screen width is less than 1024px
+        // Exit the function without applying the effects
         return;
     }
 
     const buttons = document.querySelectorAll('.is-form-submit');
 
     buttons.forEach(button => {
-        button.addEventListener('mousemove', (e) => {
+        const mouseMoveHandler = (e) => {
             const rect = button.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -188,13 +189,17 @@ function initButtonMagneticEffect() {
             }
 
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
-        });
+        };
 
-        button.addEventListener('mouseleave', () => {
+        const mouseLeaveHandler = () => {
             button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
-        });
+        };
+
+        button.addEventListener('mousemove', mouseMoveHandler);
+        button.addEventListener('mouseleave', mouseLeaveHandler);
     });
 }
+
 
 
 
