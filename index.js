@@ -155,13 +155,16 @@ function initFooterSpacingCalcs() {
 }
 
 function initButtonMagneticEffect() {
-    // Exit the function if the device screen width is less than 1024 pixels
-    if (window.innerWidth < 1024) {
+    // Adjust the minWidth threshold as needed to suit your definition of "desktop" size
+    const minWidth = 1024;
+    if (window.innerWidth < minWidth) {
+        // The screen size is tablet or smaller, so exit the function without applying the effects
         return;
     }
 
-    // Apply the magnetic effect to buttons
-    document.querySelectorAll('.is-form-submit').forEach(button => {
+    const buttons = document.querySelectorAll('.is-form-submit');
+
+    buttons.forEach(button => {
         button.addEventListener('mousemove', (e) => {
             const rect = button.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
@@ -169,31 +172,25 @@ function initButtonMagneticEffect() {
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
 
-            const tiltIntensity = 20;
-            const moveX = (x / rect.width) * 100; // Adjust for magnetic effect
-            const moveY = (y / rect.height) * 100; // Adjust for magnetic effect
-            const tilt = x > 0 ? y * tiltIntensity : -y * tiltIntensity;
+            const distanceX = x / (rect.width / 2);
+            const distanceY = y / (rect.height / 2);
+
+            const magneticEffectIntensity = 10;
+            const moveX = distanceX * magneticEffectIntensity;
+            const moveY = distanceY * magneticEffectIntensity;
+
+            let tilt;
+            if (x > 0) {
+                tilt = distanceY * 20;
+            } else {
+                tilt = -distanceY * 20;
+            }
 
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
         });
 
         button.addEventListener('mouseleave', () => {
-            button.style.transform = '';
+            button.style.transform = 'translate(0px, 0px) rotateZ(0deg)';
         });
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
