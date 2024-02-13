@@ -1,11 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
+    initFooterSpacingCalcs();
     initGspLettersAnimation();
     initClickAndDragTestimonialsInertia();
     initMoreFeaturesSectionAnimation();
     initLenisSmoothScroll();
-    initFooterSpacingCalcs();
     initButtonMagneticEffect();
 });
+
+function initFooterSpacingCalcs() {
+    const footer = document.getElementById('footer');
+    const footerSpacing = document.getElementById('footer-spacing');
+
+    function adjustFooterSpacing() {
+        const footerHeight = footer.offsetHeight;
+        footerSpacing.style.height = footerHeight + 'px';
+    }
+
+    adjustFooterSpacing();
+    window.addEventListener('resize', adjustFooterSpacing);
+}
 
 function initGspLettersAnimation() {
     let typeSplit = new SplitType("[text-split]", {
@@ -139,19 +152,6 @@ function initLenisSmoothScroll() {
     }
 
     requestAnimationFrame(raf);
-}
-
-function initFooterSpacingCalcs() {
-    const footer = document.getElementById('footer');
-    const footerSpacing = document.getElementById('footer-spacing');
-
-    function adjustFooterSpacing() {
-        const footerHeight = footer.offsetHeight;
-        footerSpacing.style.height = footerHeight + 'px';
-    }
-
-    adjustFooterSpacing();
-    window.addEventListener('resize', adjustFooterSpacing);
 }
 
 function initButtonMagneticEffect() {
