@@ -181,9 +181,9 @@ function initButtonMagneticEffect() {
 
             let tilt;
             if (x > 0) {
-                tilt = distanceY * 10;
+                tilt = distanceY * 5;
             } else {
-                tilt = -distanceY * 10;
+                tilt = -distanceY * 5;
             }
 
             button.style.transform = `translate(${moveX}px, ${moveY}px) rotateZ(${tilt}deg)`;
