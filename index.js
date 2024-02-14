@@ -194,3 +194,19 @@ function initButtonMagneticEffect() {
         });
     });
 }
+
+// Change transform from top to bottom
+document.addEventListener('scroll', function () {
+    var scrollPosition = window.scrollY;
+    var pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var halfwayPoint = pageHeight / 2;
+
+    // Assuming .main-wrapper is the class of your element
+    var mainWrapper = document.querySelector('.main-wrapper');
+
+    if (scrollPosition < halfwayPoint) {
+        mainWrapper.style.transformOrigin = 'top';
+    } else {
+        mainWrapper.style.transformOrigin = 'bottom';
+    }
+});
