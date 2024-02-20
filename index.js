@@ -48,7 +48,7 @@ function initGspLettersAnimation() {
             yPercent: 100,
             duration: 0.8,
             ease: "power1.out",
-            stagger: { amount: 0.2 }
+            stagger: { amount: 0 }
         });
         createScrollTrigger(element, tl);
     });
@@ -195,18 +195,3 @@ function initButtonMagneticEffect() {
     });
 }
 
-// Change transform from top to bottom
-document.addEventListener('scroll', function () {
-    var scrollPosition = window.scrollY;
-    var pageHeight = document.documentElement.scrollHeight - window.innerHeight;
-    var halfwayPoint = pageHeight / 2;
-
-    // Assuming .main-wrapper is the class of your element
-    var mainWrapper = document.querySelector('.main-wrapper');
-
-    if (scrollPosition < halfwayPoint) {
-        mainWrapper.style.transformOrigin = 'top';
-    } else {
-        mainWrapper.style.transformOrigin = 'bottom';
-    }
-});
